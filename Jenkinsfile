@@ -1,49 +1,49 @@
-def installPythonDependencies() {
-    sh '''
-        python3 -m venv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
-    '''
-}
+def customFunctions
 
 pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Load Functions') {
             steps {
-                // Check out the Git repository
                 script {
-                    checkout scm
+                    customFunctions = load 'jenkinsFunctions.groovy'
                 }
             }
         }
 
-        stage('Install Dependencies') {
+        stage('checkout') {
             steps {
-                // Call the function to install Python dependencies
                 script {
-                    installPythonDependencies()
+                    def repoUrl = 'https://github.com/I201753-Shayan/MLOps_Task7.git'
+                    def branch = 'main'
+                    customFunctions.checkoutCode(repoUrl, branch)
                 }
             }
         }
 
-        stage('Run Tests') {
+        stage('Build') {
             steps {
-                // Run your Python test script
-                sh 'python test.py'
+                script {
+                    customFunctions.buildProject()
+                }
             }
         }
-    }
 
-    post {
-        success {
-            // This block is executed if the pipeline is successful
-            echo 'Pipeline completed successfully'
+        stage('Test') {
+            steps {
+                script {
+                    customFunctions.runTests()
+                }
+            }
         }
-        failure {
-            // This block is executed if the pipeline fails
-            echo 'Pipeline failed'
+
+        stage('Deploy') {
+            steps {
+                script {
+                    customFunctions.deployApplication()
+                }
+            }
         }
     }
 }
