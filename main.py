@@ -1,5 +1,3 @@
-#testing2
-
 class Bulb:
     status = 0
 
