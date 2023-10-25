@@ -4,12 +4,12 @@ def checkoutCode(String repoUrl, String branch) {
 
 def buildProject() {
     echo 'Building'
-    bat 'pip3 install -r requirements.txt'
+    bat 'pip install -r requirements.txt'
 }
 
 def runTests() {
     echo 'Test'
-    bat 'python test.py'
+    bat 'python3 test.py'
 }
 
 def deployApplication() {
